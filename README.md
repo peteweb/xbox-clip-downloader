@@ -25,10 +25,10 @@ During development, simplistic arguments are used for speed. In later versions, 
 
 #### Arguments
 
-> 1st : REQUIRED : STRING : your XboxAPI.com API key, within double or single quotes
-> 2nd : REQUIRED : STRING : the absolute path to a directory that is writable by node processes (e.g. a directory with 777 permissions or similar)
-> 3rd : REQUIRED : STRING : the Xbox Live gamertag that you wish to download videos for (note - this tool does not currently handle accounts without videos - use a service like http://xboxclips.com to make sure you have clips to download in advance)
-> 4th : OPTIONAL : INT 1/0 : verbose flag (shows detailed information in console output - work in progress - will eventually show more)
+* 1st : REQUIRED : STRING : your XboxAPI.com API key, within double or single quotes
+* 2nd : REQUIRED : STRING : the absolute path to a directory that is writable by node processes (e.g. a directory with 777 permissions or similar)
+* 3rd : REQUIRED : STRING : the Xbox Live gamertag that you wish to download videos for (note - this tool does not currently handle accounts without videos - use a service like http://xboxclips.com to make sure you have clips to download in advance)
+* 4th : OPTIONAL : INT 1/0 : verbose flag (shows detailed information in console output - work in progress - will eventually show more)
 
 ```
 #!javascript
@@ -37,10 +37,10 @@ node xboxOneClips.js "XBOXAPI_APIKEY_HERE" "/absolute/path/to/dir/to/save/files/
 
 ### Planned arguments
 
-> -k : REQUIRED : STRING : your XboxAPI.com API key, within double or single quotes
-> -d : REQUIRED : STRING : the absolute path to a directory that is writable by node processes (e.g. a directory with 777 permissions or similar)
-> -t : REQUIRED : STRING : the Xbox Live gamertag that you wish to download videos for (note - this tool does not currently handle accounts without videos - use a service like http://xboxclips.com to make sure you have clips to download in advance)
-> -o : OPTIONAL : NO PARAMS : verbose flag (shows detailed information in console output - work in progress - will eventually show more)
+* -k : REQUIRED : STRING : your XboxAPI.com API key, within double or single quotes
+* -d : REQUIRED : STRING : the absolute path to a directory that is writable by node processes (e.g. a directory with 777 permissions or similar)
+* -t : REQUIRED : STRING : the Xbox Live gamertag that you wish to download videos for (note - this tool does not currently handle accounts without videos - use a service like http://xboxclips.com to make sure you have clips to download in advance)
+* -o : OPTIONAL : NO PARAMS : verbose flag (shows detailed information in console output - work in progress - will eventually show more)
 
 ```
 #!javascript
