@@ -1,3 +1,10 @@
+/**
+* Xbox One clip CLI download tool
+* Author: @peteweb
+* Version: 0.0.1
+**/
+var versionNumber = '0.0.1';
+
 var mod_getopt = require('posix-getopt');
 var Q = require('q');
 var cp = require('child_process');
@@ -17,7 +24,7 @@ var kHelptext = "-k must be a string that matches your xboxapi.com apikey";
 var tHelptext = "-t must be a string that matches a valid Xbox One gamertag";
 var dHelptext = "-d must be a string that points towards a valid, writable, directory";
 
-parser = new mod_getopt.BasicParser('abo:(output)', process.argv);
+//parser = new mod_getopt.BasicParser('abo:(output)', process.argv);
 
 xboxOneApiKey = process.argv[2];
 downloadDirectory = process.argv[3];
@@ -313,7 +320,7 @@ return getClipsDeferred
 		return resPromise19.promise;
 	})
 	.then(function(result){
-		var resPromise10 = Q.defer();
+		var resPromise20 = Q.defer();
 		console.log('starting promise chain step 20');
 		cp.exec('node parseXboxOneGameClipsResponse.js "'
 			+ downloadDirectory + '/' + xboxOneGamertag + 'Clips" "'
@@ -454,4 +461,7 @@ return getClipsDeferred
 				resPromise30.resolve(true);
 			});
 		return resPromise30.promise;
+	})
+	.then(function(){
+		console.log('All 30 promise chains are finished - run again if required.');
 	});
