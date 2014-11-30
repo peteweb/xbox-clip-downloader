@@ -1,31 +1,54 @@
-var getoptsLong = require('posix-getopt');
-var parser, option;
+var mod_getopt = require('posix-getopt');
+var Q = require('q');
+var cp = require('child_process');
 
-parser = new getoptsLong.BasicParser('abo:(output)', process.argv);
+var parser,
+	option,
+	xboxOneApiKey,
+	xboxOneGamertag,
+	downloadDirectory = null;
+var verbose = '';
 
-while ((option = parser.getopt()) !== undefined) {
-	switch (option.option) {
-    case 'k':
-        console.log('k is used for the apikey');
-        break;
+var kHelptext = "-k must be a string that matches your xboxapi.com apikey";
+var tHelptext = "-t must be a string that matches a valid Xbox One gamertag";
+var dHelptext = "-d must be a string that points towards a valid, writable, directory";
 
-    case 't':
-        console.log('t is used for a gamertag');
-        break;
+parser = new mod_getopt.BasicParser('abo:(output)', process.argv);
 
-    case 'd':
-        console.error('d is for the download directory',
-            option.optarg);
-        break;
+xboxOneApiKey = process.argv[2];
+downloadDirectory = process.argv[3];
+xboxOneGamertag = process.argv[4];
+showVerboseInformation = process.argv[5];
 
-    default:
-        /* error message already emitted by getopt */
-        mod_assert.equal('?', option.option);
-        break;
-    }
+if(showVerboseInformation === 1){
+	verbose = ' 1';
+	console.log('This process will use the following supplied information:');
+	console.log("xboxapi.com API key: " + xboxOneApiKey);
+	console.log("Download directory: " + downloadDirectory);
+	console.log("Xbox Gamertag: " + xboxOneGamertag);
 }
 
-if (parser.optind() >= process.argv.length)
-	usage('missing required argument: "input"');
+var getClipsDeferred = Q.defer();
 
-console.log('input = %s', process.argv[parser.optind()]);
+cp.exec('node getXboxOneGameClips.js "' + xboxOneApiKey + '" "' + downloadDirectory + '" "' + xboxOneGamertag + '"' + verbose, function(error,stdout,stderr){
+	if(error !== null){
+		// we encountered an error
+		console.log('Fallen at the first hurdle - we hit an error with executing the script to get game clips. Is your API key correct? Does your gamertag exist? And does your chosen directory allow node to write to it?');
+		console.log('The specific error we saw was:');
+		console.log(stderr);
+		getClipsDeferred.reject(error);
+	} else {
+		if(showVerboseInformation === 1){
+			console.log(stdout);
+			console.log('Passed the first hurdle!');
+		}
+		getClipsDeferred.resolve(stdout);
+	}
+});
+
+return getClipsDeferred.promise.then(function(result){
+	//console.log(result);
+	var json = require(fileDirectory + '/' + xboxOneGamertag + 'Clips.json');
+	//console.log(json);
+	console.log('EXECUTED');
+});

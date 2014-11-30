@@ -1,6 +1,6 @@
 # Node Xbox One Clip Downloader
 
-A simple tool that allows you to easily download all of the currently available public Xbox One video clips for a given Xbox One gamertag.
+A simple tool that allows you to easily download all of the currently available public video clips for a given Xbox One gamertag.
 
 ## Requirements
 
@@ -11,9 +11,10 @@ For this to work, an API key is required from: https://xboxapi.com
 ### Node modules / NPM packages
 
 * fs
-* http
+* https
 * child_process
 * posix-getopt
+* q
 
 ## Usage
 
