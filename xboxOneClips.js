@@ -48,7 +48,7 @@ cp.exec('node getXboxOneGameClips.js "' + xboxOneApiKey + '" "' + downloadDirect
 
 return getClipsDeferred.promise.then(function(result){
 	//console.log(result);
-	var json = require(fileDirectory + '/' + xboxOneGamertag + 'Clips.json');
-	//console.log(json);
+	var json = require(fileDirectory + '/' + xboxOneGamertag + 'Clips');
+	console.log(json);
 	console.log('EXECUTED');
 });
