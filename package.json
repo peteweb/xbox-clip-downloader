@@ -1,0 +1,13 @@
+{
+    "name": "xboxclipdownloader",
+    "version": "0.0.2",
+    "author": "petedoeswebthings@gmail.com",
+    "dependencies": {
+        "child_process": "latest",
+        "fs": "latest",
+        "http": "latest",
+        "https": "latest",
+        "posix-getopt": "latest",
+        "q": "latest"
+    }
+}
