@@ -6,10 +6,14 @@
         "fs": "latest",
         "http": "latest",
         "https": "latest",
-        "posix-getopt": "latest",
-        "q": "latest",
-        "jasmine-node": "latest",
         "istanbul": "latest",
-        "grunt": "latest"
+        "jasmine-node": "latest",
+        "posix-getopt": "latest",
+        "proxyquire": "latest",
+        "q": "latest"
+    },
+    "scripts": {
+        "coverage": "istanbul cover --include-all-sources jasmine-node unit-tests/",
+        "unit": "jasmine-node unit-tests/"
     }
 }
