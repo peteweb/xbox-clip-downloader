@@ -3,12 +3,11 @@
 * Author: petedoeswebthings@gmail.com
 * Version: 0.2.0
 **/
-var versionNumber = '0.2.0';
 
+var pkg = require('./package.json');
 var mod_getopt = require('posix-getopt');
 var Q = require('q');
 var cp = require('child_process');
-
 var parser,
 	option,
 	xboxOneApiKey,
@@ -17,28 +16,44 @@ var parser,
 var verbose = '';
 var count = 0;
 
-var examplePrefix = 'Example: ';
-
 function weHaveArgFor(flag){
-	return process.argv.indexOf(flag);
+	return (process.argv.indexOf(flag) !== -1);
 }
 
-if(!weHaveArgFor("-k")){
-	var exampleK = examplePrefix + '-k "XBOXAPI_APIKEY_HERE"';
+function getArgFor(flag){
+	return process.argv[process.argv.indexOf(flag) + 1];
+}
+
+function isNotNullUndefinedEmpty(value){
+	if(value !== null && value !== undefined && value !== ""){
+		return true;
+	} else {
+		return false;
+	}
+}
+
+if(weHaveArgFor("--version")){
+	return console.log(pkg.version);
+}
+
+var exPrefix = 'Example: ';
+
+if(!weHaveArgFor("-k") && !isNotNullUndefinedEmpty(getArgFor("-k"))){
+	var exampleK = exPrefix + '-k "XBOXAPI_APIKEY_HERE"';
 	return console.log("-k must be set to a string that matches your xboxapi.com apikey, inside single or double quotes. " + exampleK);
 }
 
-if(!weHaveArgFor("-t")){
-	var exampleT = examplePrefix + '-t "GAMERTAG_HERE"';
+if(!weHaveArgFor("-t") && !isNotNullUndefinedEmpty(getArgFor("-t"))){
+	var exampleT = exPrefix + '-t "GAMERTAG_HERE"';
 	return console.log("-t must be a string that matches a valid Xbox One gamertag, inside single or double quotes. " + exampleT);
 }
 
-if(!weHaveArgFor("-d")){
-	var exampleD = examplePrefix + '-d "/absolute/path/to/dir/to/save/files/in"';
+if(!weHaveArgFor("-d") && !isNotNullUndefinedEmpty(getArgFor("-d"))){
+	var exampleD = exPrefix + '-d "/absolute/path/to/dir/to/save/files/in"';
 	return console.log("-d must be a string that points towards a valid, writable, directory - inside single or double quotes. " + exampleD);
 }
 
-if(!weHaveArgFor("-v")){
+if(weHaveArgFor("-v")){
 	showVerboseInformation = true;
 } else {
 	showVerboseInformation = false;
