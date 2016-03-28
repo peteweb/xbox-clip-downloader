@@ -1,9 +1,9 @@
 /**
 * Xbox One clip CLI download tool
-* Author: @peteweb
-* Version: 0.0.1
+* Author: petedoeswebthings@gmail.com
+* Version: 0.2.0
 **/
-var versionNumber = '0.0.1';
+var versionNumber = '0.2.0';
 
 var mod_getopt = require('posix-getopt');
 var Q = require('q');
@@ -17,18 +17,38 @@ var parser,
 var verbose = '';
 var count = 0;
 
-var kHelptext = "-k must be a string that matches your xboxapi.com apikey";
-var tHelptext = "-t must be a string that matches a valid Xbox One gamertag";
-var dHelptext = "-d must be a string that points towards a valid, writable, directory";
+var examplePrefix = 'Example: ';
 
-//parser = new mod_getopt.BasicParser('abo:(output)', process.argv);
+function weHaveArgFor(flag){
+	return process.argv.indexOf(flag);
+}
 
-xboxOneApiKey = process.argv[2];
-downloadDirectory = process.argv[3];
-xboxOneGamertag = process.argv[4];
-showVerboseInformation = process.argv[5];
+if(!weHaveArgFor("-k")){
+	var exampleK = examplePrefix + '-k "XBOXAPI_APIKEY_HERE"';
+	return console.log("-k must be set to a string that matches your xboxapi.com apikey, inside single or double quotes. " + exampleK);
+}
 
-if(showVerboseInformation === 1){
+if(!weHaveArgFor("-t")){
+	var exampleT = examplePrefix + '-t "GAMERTAG_HERE"';
+	return console.log("-t must be a string that matches a valid Xbox One gamertag, inside single or double quotes. " + exampleT);
+}
+
+if(!weHaveArgFor("-d")){
+	var exampleD = examplePrefix + '-d "/absolute/path/to/dir/to/save/files/in"';
+	return console.log("-d must be a string that points towards a valid, writable, directory - inside single or double quotes. " + exampleD);
+}
+
+if(!weHaveArgFor("-v")){
+	showVerboseInformation = true;
+} else {
+	showVerboseInformation = false;
+}
+
+xboxOneApiKey = process.argv[process.argv.indexOf('-k') + 1];
+downloadDirectory = process.argv[process.argv.indexOf('-d') + 1];
+xboxOneGamertag = process.argv[process.argv.indexOf('-t') + 1];
+
+if(showVerboseInformation){
 	verbose = ' 1';
 	console.log('This process will use the following supplied information:');
 	console.log("xboxapi.com API key: " + xboxOneApiKey);
@@ -82,6 +102,8 @@ function clipsResponsePromise(result){
 
 	return prom.promise;
 }
+
+
 
 return getClipsDeferred
 	.promise
