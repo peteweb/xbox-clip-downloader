@@ -7,6 +7,9 @@
         "http": "latest",
         "https": "latest",
         "posix-getopt": "latest",
-        "q": "latest"
+        "q": "latest",
+        "jasmine-node": "latest",
+        "istanbul": "latest",
+        "grunt": "latest"
     }
 }
