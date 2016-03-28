@@ -1,13 +1,16 @@
 var http = require('https');
 var fs = require('fs');
+var helper = require('./helper.js');
+var args = process.argv;
 
-var xboxOneApiKey = process.argv[2];
-var fileDirectory = process.argv[3];
-var xboxOneGamertag = process.argv[4];
-var showVerboseInformation = process.argv[5];
+var xboxOneApiKey = helper.getArgFor(args, "-k");
+var downloadDirectory = helper.getArgFor(args, "-d");
+var xboxOneGamertag = helper.getArgFor(args, "-t");
 
-if(showVerboseInformation === 1){
-	console.log('Requesting a list of game clips, using with the following details...');
+var showVerboseInformation = false;
+if(helper.weHaveArgFor(args, "-v")){
+	showVerboseInformation = true;
+	console.log('Requesting a list of game clips, using with the following details:');
 	console.log("xboxapi.com API key: " + xboxOneApiKey);
 	console.log("Download directory: " + downloadDirectory);
 	console.log("Xbox Gamertag: " + xboxOneGamertag);
@@ -25,12 +28,12 @@ var options = {
 
 var callback = function(response) {
 	var str = '';
-	var file = fs.createWriteStream(fileDirectory + '/' + xboxOneGamertag + 'Clips.json');
+	var file = fs.createWriteStream(downloadDirectory + '/' + xboxOneGamertag + 'Clips.json');
 
 	response.pipe(file);
-	
+
 	response.on('end', function () {
-		if(showVerboseInformation === 1){
+		if(showVerboseInformation){
 			console.log('All done! Xbox clips file saved to: '
 				+ downloadDirectory
 				+ '/'

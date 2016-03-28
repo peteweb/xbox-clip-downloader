@@ -3,74 +3,98 @@ var cp = require('child_process');
 var Q = require('q');
 var http = require('http');
 
-var parsedJSON = require(process.argv[2]);
-var fileDir = process.argv[3];
-var gamertag = process.argv[4];
-var downloadArray = [];
+var args = process.argv;
 
-for (var i = parsedJSON.length - 1; i >= 0; i--) {
+var model = {
+	currentClip: 0,
+	response: {},
+	fileDir: '',
+	gamertag: '',
+	downloadArray: [],
+	parseResponse: function(callback){
 
-	for (var p = parsedJSON[i].gameClipUris.length - 1; p >= 0; p--) {
-		var pathToFile = fileDir + '/' + gamertag + '-' + parsedJSON[i].titleName.replace(/\W+/g, "") + '-' + parsedJSON[i].dateRecorded.replace(/\W+/g, "-") + '.MP4';
+		for (var i = model.response.length - 1; i >= 0; i--) {
 
-		if(parsedJSON[i].gameClipUris[p].uriType === 'Download' && !fs.existsSync(pathToFile)){
-			downloadArray.push({
-				'recordedDate':parsedJSON[i].dateRecorded,
-				'recordedDateFriendly':parsedJSON[i].dateRecorded.replace(/\W+/g, "-"),
-				'clipTitle':parsedJSON[i].titleName,
-				'clipTitleFriendly':parsedJSON[i].titleName.replace(/\W+/g, ""),
-				'clipDownloadURL':parsedJSON[i].gameClipUris[p].uri,
-				'clipDownloadDir':fileDir,
-				'clipDownloadAbsolutePath':pathToFile
-			});
-		}
-	};
+			for (var p = model.response[i].gameClipUris.length - 1; p >= 0; p--) {
+				var pathToFile = model.fileDir + '/' + model.gamertag + '-' + model.response[i].titleName.replace(/\W+/g, "") + '-' + model.response[i].dateRecorded.replace(/\W+/g, "-") + '.MP4';
+
+				if(model.response[i].gameClipUris[p].uriType === 'Download' && !fs.existsSync(pathToFile)){
+					model.downloadArray.push({
+						'recordedDate':model.response[i].dateRecorded,
+						'recordedDateFriendly':model.response[i].dateRecorded.replace(/\W+/g, "-"),
+						'clipTitle':model.response[i].titleName,
+						'clipTitleFriendly':model.response[i].titleName.replace(/\W+/g, ""),
+						'clipDownloadURL':model.response[i].gameClipUris[p].uri,
+						'clipDownloadDir':model.fileDir,
+						'clipDownloadAbsolutePath':pathToFile
+					});
+				}
+			};
+		};
+
+		callback();
+
+	},
+	downloadFile: function(callback) {
+
+	    if(model.currentClip <= 2) {
+
+	        var download = model.downloadArray[model.currentClip].clipDownloadURL;
+	        var file = fs.createWriteStream(model.downloadArray[model.currentClip].clipDownloadAbsolutePath);
+
+	        http.get(download, function(response) {
+
+	        	// pipe the response to the file
+				response.pipe(file);
+
+				file.on('error', function(error){
+					callback(error);
+					if(model.currentClip === 2){
+						process.exit(1);
+					}
+				});
+
+				file.on('finish', function() {
+					file.close(function(){
+						callback();
+						model.downloadFile(callback);
+					});
+			    });
+
+	        });
+
+	    }
+	}
 };
 
-var getSingleClipDefer = Q.defer();
-var currentClip = 0;
-var promisesPromises = [];
+model.response = require(process.argv[2]);
+model.fileDir = process.argv[3];
+model.gamertag = process.argv[4];
 
-
-var downloadFile = function(callback) {
-    // if(currentClip <= downloadArray.length) {
-    if(currentClip <= 2) {
-
-        var download = downloadArray[currentClip].clipDownloadURL;
-        var file = fs.createWriteStream(downloadArray[currentClip].clipDownloadAbsolutePath);
-
-        http.get(download, function(response) {
-
-        	// pipe the response to the file
-			response.pipe(file);
-
-			file.on('error', function(error){
-				// console.log('Something went wrong trying to download the clip from this URL: ' + downloadArray[currentClip].clipDownloadURL);
-				// console.log('Does the directory: ' + downloadArray[currentClip].clipDownloadDir + ' have read / write access allowed for node?');
+model.parseResponse(function(){
+	model.downloadFile(function(error) {
+		if(error){
+			console.log("Download for "
+		    	+ model.gamertag
+		    	+ '-'
+		    	+ model.downloadArray[model.currentClip].clipTitleFriendly
+		    	+ '-'
+		    	+ model.downloadArray[model.currentClip].recordedDateFriendly
+		    	+ " fell over.");
 				console.log('The specific error seen was:');
 				console.log(error);
-			});
-
-			file.on('finish', function() {
-		      file.close(function(){
-		      	console.log('Finished processing.');
-		      });
-		    });
-
-            currentClip++;
-            downloadFile(callback);
-        });
-    } else {
-        callback();
-    }
-}
-
-downloadFile(function() {
-    console.log("Download for "
-    	+ gamertag
-    	+ '-'
-    	+ downloadArray[currentClip].clipTitleFriendly
-    	+ '-'
-    	+ downloadArray[currentClip].recordedDateFriendly
-    	+ " complete.");
+		} else {
+			console.log("Download for "
+		    	+ model.gamertag
+		    	+ '-'
+		    	+ model.downloadArray[model.currentClip].clipTitleFriendly
+		    	+ '-'
+		    	+ model.downloadArray[model.currentClip].recordedDateFriendly
+		    	+ " complete.");
+				if(model.currentClip === 2){
+					process.exit();
+				}
+		}
+		model.currentClip++;
+	});
 });
