@@ -5,7 +5,7 @@
 **/
 
 var pkg = require('./package.json');
-var helper = require('./helper.js');
+var helper = require('./libs/helper.js');
 var mod_getopt = require('posix-getopt');
 var Q = require('q');
 var cp = require('child_process');

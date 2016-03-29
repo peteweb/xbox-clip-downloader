@@ -1,6 +1,6 @@
 var http = require('https');
 var fs = require('fs');
-var helper = require('./helper.js');
+var helper = require('./libs/helper.js');
 var args = process.argv;
 
 var xboxOneApiKey = helper.getArgFor(args, "-k");
