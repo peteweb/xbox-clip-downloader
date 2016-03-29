@@ -13,7 +13,7 @@
         "q": "latest"
     },
     "scripts": {
-        "coverage": "istanbul cover --include-all-sources jasmine-node unit-tests/",
-        "unit": "jasmine-node unit-tests/"
+        "coverage": "istanbul cover --include-all-sources jasmine-node unit-tests/specs/",
+        "unit": "jasmine-node unit-tests/specs/"
     }
 }
