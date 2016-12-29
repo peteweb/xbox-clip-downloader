@@ -2,9 +2,9 @@ import 'babel-polyfill';
 import assert from 'assert';
 import path from 'path';
 
-import ResponseHandler from "../ResponseHandler";
+import ResponseHandler from "../../classes/ResponseHandler";
 
-describe('ResponseHandler', function() {
+describe('classes/ResponseHandler', function() {
 
     var classInstance;
 
@@ -98,7 +98,7 @@ describe('ResponseHandler', function() {
 
     describe('#createObject()', function() {
 
-        it('should return the correct filename when valid gamertag and fileDir properties are set', function() {
+        it('should create a download object correctly', function() {
             classInstance.gamertag = 'gamertaghere';
             classInstance.fileDir = '/path/to/save/videos/at';
 
