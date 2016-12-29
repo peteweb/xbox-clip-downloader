@@ -1,4 +1,4 @@
-import 'fs';
+import fs from 'fs';
 
 export default class ResponseHandler {
 
@@ -75,9 +75,9 @@ export default class ResponseHandler {
             for (var i = this.response.length - 1; i >= 0; i--) {
                 if(this.response && this.response[i] && this.response[i].gameClipUris && this.response[i].gameClipUris.length){
                     for (var p = this.response[i].gameClipUris.length - 1; p >= 0; p--) {
-                        var pathToFile = this.createAbsoluteFilepath(this.downloadArray[i].dateRecorded, this.downloadArray[i].titleName);
-                        if(!fs.existsSync(pathToFile) && this.downloadArray[i].gameClipUris[p].uriType === 'Download'){
-                            var obj = this.createObject(downloadArray[i].dateRecorded, downloadArray[i].titleName, downloadArray[i].gameClipUris[p].uri)
+                        var pathToFile = this.createAbsoluteFilepath(this.response[i].dateRecorded, this.response[i].titleName);
+                        if(!fs.existsSync(pathToFile) && this.response[i].gameClipUris[p].uriType === 'Download'){
+                            var obj = this.createObject(this.response[i].dateRecorded, this.response[i].titleName, this.response[i].gameClipUris[p].uri)
                             this._downloadArray.push(obj);
                         }
                     }

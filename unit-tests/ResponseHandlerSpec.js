@@ -112,8 +112,57 @@ describe('ResponseHandler', function() {
                 clipDownloadDir: '/path/to/save/videos/at',
                 clipDownloadAbsolutePath: '/path/to/save/videos/at/gamertaghere-Halo5Guardians-2016-12-04-08-15-01.MP4'
             };
-            // console.log(filename);
             assert.deepEqual(createdObject, expected);
+        });
+
+    });
+
+    describe('#parseResponse()', function() {
+
+        it('should parse a response object correctly', function() {
+            classInstance.gamertag = 'gamertaghere';
+            classInstance.fileDir = '/path/to/save/videos/at';
+            var sampleResponse = [
+                {
+                    "titleName": "Halo 5: Guardians",
+                    "dateRecorded": "2016-12-01 12:01:01",
+                    "gameClipUris":[{
+                        "uri": "http://domain.com/fileA.mp4",
+                        "fileSize": 12345678,
+                        "uriType": "Download",
+                        "expiration": "2016-12-26 01:01:01"
+                    }]
+                },
+                {
+                    "titleName": "Halo 5: Guardians",
+                    "dateRecorded": "2016-12-02 12:01:01",
+                    "gameClipUris":[{
+                        "uri": "http://domain.com/fileB.mp4",
+                        "fileSize": 12345678,
+                        "uriType": "Download",
+                        "expiration": "2016-12-26 01:01:01"
+                    }]
+                }
+            ];
+            var createdObject = classInstance.parseResponse(sampleResponse);
+            var expected = [{
+                recordedDate: '2016-12-02 12:01:01',
+                recordedDateFriendly: '2016-12-02-12-01-01',
+                clipTitle: 'Halo 5: Guardians',
+                clipTitleFriendly: 'Halo5Guardians',
+                clipDownloadURL: 'http://domain.com/fileB.mp4',
+                clipDownloadDir: '/path/to/save/videos/at',
+                clipDownloadAbsolutePath: '/path/to/save/videos/at/gamertaghere-Halo5Guardians-2016-12-02-12-01-01.MP4'
+            },{
+                recordedDate: '2016-12-01 12:01:01',
+                recordedDateFriendly: '2016-12-01-12-01-01',
+                clipTitle: 'Halo 5: Guardians',
+                clipTitleFriendly: 'Halo5Guardians',
+                clipDownloadURL: 'http://domain.com/fileA.mp4',
+                clipDownloadDir: '/path/to/save/videos/at',
+                clipDownloadAbsolutePath: '/path/to/save/videos/at/gamertaghere-Halo5Guardians-2016-12-01-12-01-01.MP4'
+            }];
+            assert.deepEqual(classInstance.downloadArray, expected);
         });
 
     });
