@@ -1,19 +1,31 @@
 {
-    "name": "xboxclipdownloader",
-    "version": "0.2.0",
-    "author": "petedoeswebthings@gmail.com",
-    "dependencies": {
-        "fs": "latest",
-        "http": "latest",
-        "https": "latest",
-        "istanbul": "latest",
-        "jasmine-node": "latest",
-        "posix-getopt": "latest",
-        "proxyquire": "latest",
-        "q": "latest"
-    },
-    "scripts": {
-        "coverage": "istanbul cover --include-all-sources jasmine-node unit-tests/specs/",
-        "unit": "jasmine-node unit-tests/specs/"
-    }
+  "name": "xboxclipdownloader",
+  "version": "0.3.0",
+  "author": "petedoeswebthings@gmail.com",
+  "dependencies": {
+    "babel": "^6.5.2",
+    "babel-core": "^6.20.0",
+    "babel-polyfill": "^6.20.0",
+    "babel-preset-es2015": "^6.18.0",
+    "download": "^5.0.2",
+    "fs": "0.0.1-security",
+    "http": "0.0.0",
+    "https": "^1.0.0",
+    "istanbul": "latest",
+    "jasmine-node": "latest",
+    "path": "^0.12.7",
+    "posix-getopt": "latest",
+    "proxyquire": "latest",
+    "q": "latest"
+  },
+  "scripts": {
+    "getxboxvideos": "node --use_strict xboxOneClipsNew.js",
+    "test": "./node_modules/mocha/bin/mocha unit-tests/* --compilers js:babel-core/register"
+  },
+  "devDependencies": {
+    "assert": "^1.4.1",
+    "babel": "^6.5.2",
+    "chai": "^3.5.0",
+    "mocha": "^3.2.0"
+  }
 }

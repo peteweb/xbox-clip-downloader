@@ -1,7 +1,7 @@
 /**
 * Xbox One clip CLI download tool
 * Author: petedoeswebthings@gmail.com
-* Version: 0.2.0
+* Version: 0.3.0
 **/
 
 var pkg = require('./package.json');
@@ -94,45 +94,21 @@ function clipsResponsePromise(result){
 		+ downloadDirectory + '" "'
 		+ xboxOneGamertag + '"',
 		function(error,stdout,stderr){
-			console.log(stdout);
-			prom.resolve(true);
+			if(error !== null){
+				console.error(error);
+				prom.reject(error);
+			} else {
+				console.log(stdout);
+				prom.resolve(true);
+			}
+
 		});
 
 	return prom.promise;
 }
 
-return getClipsDeferred
-	.promise
+return getClipsDeferred.promise
 	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(clipsResponsePromise)
-	.then(function(){
-		console.log('All 30 promise chains are finished - run again if required.');
+	.done(function(){
+		console.log('Promise chains complete.');
 	});

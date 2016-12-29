@@ -2,21 +2,34 @@ var fs = require('fs');
 var cp = require('child_process');
 var Q = require('q');
 var http = require('http');
+var downloader = require('download');
+var eventEmitter = require('events');
 
 var args = process.argv;
 
 var model = {
 	currentClip: 0,
 	response: {},
+	setResponse: function(jsonFilePath){
+		model.response = require(jsonFilePath);
+	},
 	fileDir: '',
+	setFileFir: function(dir){
+		model.fileDir = dir;
+	},
 	gamertag: '',
+	setGamertag: function(gt){
+		model.gamertag = gt;
+	},
 	downloadArray: [],
 	parseResponse: function(callback){
 
 		for (var i = model.response.length - 1; i >= 0; i--) {
 
 			for (var p = model.response[i].gameClipUris.length - 1; p >= 0; p--) {
+
 				var pathToFile = model.fileDir + '/' + model.gamertag + '-' + model.response[i].titleName.replace(/\W+/g, "") + '-' + model.response[i].dateRecorded.replace(/\W+/g, "-") + '.MP4';
+
 
 				if(model.response[i].gameClipUris[p].uriType === 'Download' && !fs.existsSync(pathToFile)){
 					model.downloadArray.push({
@@ -32,10 +45,77 @@ var model = {
 			};
 		};
 
-		callback();
+		callback(model.downloadArray);
+
+	},
+
+	downloadAllFiles: function(filesArray, callback){
+
+		console.log(filesArray);
+
+		return;
+
+		// fs.setMaxListeners((filesArray.length*2));
+
+		if(filesArray.length < 1){
+
+			console.log("ERROR: we have no files to download");
+			return;
+
+		} else {
+
+			var i = 0;
+			while (filesArray.length >= i) {
+
+				model.currentClip = i;
+
+				var downloadURL = filesArray[i].clipDownloadURL;
+				var filepath = filesArray[i].clipDownloadAbsolutePath;
+				var file = fs.createWriteStream(filepath);
+
+				downloader(downloadURL).pipe(file);
+
+				file.on('error', function(error){
+
+					console.log("ERROR saving: " + filepath);
+
+					if(model.currentClip === i){
+						i++;
+						callback(true);
+					}
+
+				});
+
+				file.on('finish', function() {
+
+					file.close(function(){
+
+						console.log("SUCCESS saving: " + filepath);
+
+						if(model.currentClip === i){
+							i++;
+							callback(true);
+						}
+
+					});
+
+			    });
+			}
+
+			//
+			// for (var i = 0; i < filesArray.length; i++) {
+			//
+			//
+			//
+			// }
+
+		}
+
 
 	},
 	downloadFile: function(callback) {
+
+
 
 	    if(model.currentClip <= 2) {
 
@@ -67,34 +147,8 @@ var model = {
 	}
 };
 
-model.response = require(process.argv[2]);
-model.fileDir = process.argv[3];
-model.gamertag = process.argv[4];
+module.exports = model;
 
-model.parseResponse(function(){
-	model.downloadFile(function(error) {
-		if(error){
-			console.log("Download for "
-		    	+ model.gamertag
-		    	+ '-'
-		    	+ model.downloadArray[model.currentClip].clipTitleFriendly
-		    	+ '-'
-		    	+ model.downloadArray[model.currentClip].recordedDateFriendly
-		    	+ " fell over.");
-				console.log('The specific error seen was:');
-				console.log(error);
-		} else {
-			console.log("Download for "
-		    	+ model.gamertag
-		    	+ '-'
-		    	+ model.downloadArray[model.currentClip].clipTitleFriendly
-		    	+ '-'
-		    	+ model.downloadArray[model.currentClip].recordedDateFriendly
-		    	+ " complete.");
-				if(model.currentClip === 2){
-					process.exit();
-				}
-		}
-		model.currentClip++;
-	});
-});
+// model.response = require(process.argv[2]);
+// model.fileDir = process.argv[3];
+// model.gamertag = process.argv[4];

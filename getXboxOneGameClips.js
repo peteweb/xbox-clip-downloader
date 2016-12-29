@@ -32,7 +32,7 @@ var callback = function(response) {
 
 	response.pipe(file);
 
-	response.on('end', function () {
+	response.on('finish', function () {
 		if(showVerboseInformation){
 			console.log('All done! Xbox clips file saved to: '
 				+ downloadDirectory
@@ -40,7 +40,7 @@ var callback = function(response) {
 				+ xboxOneGamertag
 				+ 'Clips.json');
 		}
-		return;
+		// return;
 	});
 }
 
