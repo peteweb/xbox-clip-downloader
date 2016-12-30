@@ -17,6 +17,7 @@ let parser,
 	option,
 	xboxOneApiKey,
 	xboxOneGamertag,
+	maxDownloads,
 	downloadDirectory = null;
 let verbose = '';
 let count = 0;
@@ -56,6 +57,17 @@ function startUp(){
 	downloadDirectory = helper.getArgFor(args, "-d");
 	xboxOneGamertag = helper.getArgFor(args, "-t");
 
+	var maxDownloadsRequested = helper.getArgFor(args, "-m");
+	
+	if(typeof maxDownloadsRequested !== 'number'){
+		var exampleE = exPrefix + '-m 3';
+		console.log("-m should be an int value, that restricts the number of concurrent downloads your system can handle - none found, so defaulting to a max of 5 downloads." + exampleE);
+		maxDownloads = 5;
+	} else {
+		maxDownloads = maxDownloadsRequested;
+	}
+
+
 	if(helper.weHaveArgFor(args, "-v")){
 		showVerboseInformation = true;
 		verbose = ' -v';
@@ -63,6 +75,7 @@ function startUp(){
 		console.log("xboxapi.com API key: " + xboxOneApiKey);
 		console.log("Download directory: " + downloadDirectory);
 		console.log("Xbox Gamertag: " + xboxOneGamertag);
+		console.log("Max concurrent downloads: " + maxDownloads);
 	}
 
 	cp.exec('node getXboxOneGameClips.js -k "' + xboxOneApiKey + '" -d "' + downloadDirectory + '" -t "' + xboxOneGamertag + '"' + verbose, function(error,stdout,stderr){
@@ -89,7 +102,7 @@ function startUp(){
 
 	        ResponseHandlerInstance.parseResponse(require(jsonName), function(allTheFiles){
 
-				Promise.all(DownloadHandlerInstance.generatePromiseArray(allTheFiles, console.log)).then(function(){
+				Promise.all(DownloadHandlerInstance.generatePromiseArray(allTheFiles, maxDownloads, console.log)).then(function(){
 					console.log('All done');
 					process.exit(0);
 				});

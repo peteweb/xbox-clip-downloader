@@ -55,7 +55,7 @@ export default class DownloadHandler {
         });
     }
 
-    generatePromiseArray(filesArray, logger){
+    generatePromiseArray(filesArray, maxDownloads, logger){
 
         if(filesArray.length < 1){
 
@@ -71,7 +71,7 @@ export default class DownloadHandler {
         }
 
         for (var i = 0; i < filesArray.length; i++) {
-            if(i > 9){
+            if(i > (maxDownloads - 1)){
                 // do nothing - more than 10 can overload low end systems
                 logger("INFO: Skipping " + filesArray[i].clipDownloadAbsolutePath + " - run again to get this file...");
             } else {
