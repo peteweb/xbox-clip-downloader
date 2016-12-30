@@ -1,4 +1,4 @@
-# Node Xbox One Clip Downloader - Alpha 2
+# Node Xbox One Clip Downloader - Beta 1
 
 A simple tool that allows you to easily download all of the currently available public video clips for a given Xbox One gamertag.
 
@@ -10,7 +10,7 @@ For this to work, an API key is required from: https://xboxapi.com
 
 ### Node version required
 
-0.10.* > latest (last tested with 4.2.* LTS)
+4.2.6 > latest (last tested with 4.2.6 LTS)
 
 ### Node modules / NPM packages
 
@@ -30,7 +30,7 @@ A package.json file is included for simplicity - just run `npm install` in root 
 
 ```
 #!javascript
-node xboxOneClips.js -k "XBOXAPI_APIKEY_HERE" -t "GAMERTAG_HERE" -d "/absolute/path/to/dir/to/save/files/in" -v
+npm run getxboxvideos -- -k "XBOXAPI_APIKEY_HERE" -t "GAMERTAG_HERE" -d "/absolute/path/to/dir/to/save/files/in" -v
 ```
 
 ### Deprecated arguments
