@@ -21,10 +21,16 @@ export default class DownloadHandler {
                 download(downloadURL).pipe(file);
 
     			file.on('error', function(error){
-                    if(logger){
-                        logger("ERROR saving: " + filepath);
-                    }
-                    reject(error);
+
+                    file.close(function(){
+                        if(logger){
+                            logger("ERROR saving: " + filepath);
+                            logger("Deleting messed up file from: " + filepath);
+                        }
+                        fs.unlink(filepath);
+                        reject(error);
+                    });
+                    
     			});
 
     			file.on('finish', function() {
@@ -66,7 +72,7 @@ export default class DownloadHandler {
         }
 
         for (var i = 0; i < filesArray.length; i++) {
-            this._promiseArray[i] = this.generatePromise(filesArray[i]);
+            this._promiseArray[i] = this.generatePromise(filesArray[i], logger);
         }
 
         return this._promiseArray;
