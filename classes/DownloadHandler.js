@@ -24,8 +24,8 @@ export default class DownloadHandler {
 
                     file.close(function(){
                         if(logger){
-                            logger("ERROR saving: " + filepath);
-                            logger("Deleting messed up file from: " + filepath);
+                            logger("ERROR: Downloading and saving: " + filepath + " failed.");
+                            logger("INFO: Deleting messed up file from: " + filepath);
                         }
                         fs.unlink(filepath);
                         reject(error);
@@ -37,7 +37,7 @@ export default class DownloadHandler {
 
     				file.close(function(){
                         if(logger){
-                            logger("SUCCESS saving: " + filepath);
+                            logger("INFO: Downloading and saving: " + filepath + " was succcessful!");
                         }
                         resolve({
                             success: true
@@ -73,7 +73,9 @@ export default class DownloadHandler {
         for (var i = 0; i < filesArray.length; i++) {
             if(i > 9){
                 // do nothing - more than 10 can overload low end systems
+                logger("INFO: Skipping " + filesArray[i].clipDownloadAbsolutePath + " - run again to get this file...");
             } else {
+                logger("INFO: Starting download off for " + filesArray[i].clipDownloadAbsolutePath + "...");
                 this._promiseArray[i] = this.generatePromise(filesArray[i], logger);
             }
         }
