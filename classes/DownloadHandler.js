@@ -30,7 +30,7 @@ export default class DownloadHandler {
                         fs.unlink(filepath);
                         reject(error);
                     });
-                    
+
     			});
 
     			file.on('finish', function() {
@@ -67,12 +67,15 @@ export default class DownloadHandler {
 		}
 
         if(logger){
-            logger("We have a response with " + filesArray.length + " videos inside, that looks like this:");
-    		logger(filesArray);
+            logger("We have a response with " + filesArray.length + " videos inside!");
         }
 
         for (var i = 0; i < filesArray.length; i++) {
-            this._promiseArray[i] = this.generatePromise(filesArray[i], logger);
+            if(i > 9){
+                // do nothing - more than 10 can overload low end systems
+            } else {
+                this._promiseArray[i] = this.generatePromise(filesArray[i], logger);
+            }
         }
 
         return this._promiseArray;
