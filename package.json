@@ -19,7 +19,7 @@
     "q": "latest"
   },
   "scripts": {
-    "getxboxvideos": "node --use_strict xboxOneClipsNew.js",
+    "getxboxvideos": "node --use_strict app.js",
     "test": "./node_modules/mocha/bin/mocha unit-tests/* --compilers js:babel-core/register"
   },
   "devDependencies": {

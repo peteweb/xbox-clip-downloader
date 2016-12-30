@@ -66,7 +66,7 @@ export default class ResponseHandler {
         };
     }
 
-	parseResponse(response){
+	parseResponse(response, callback){
         if(response === {}){
             // die quick
             return;
@@ -83,6 +83,7 @@ export default class ResponseHandler {
                     }
                 }
             }
+            callback(this._downloadArray);
         }
 	}
 }
